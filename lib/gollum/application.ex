@@ -17,6 +17,9 @@ defmodule Gollum.Application do
       {Gollum.Cache, opts()}
     ]
 
-    Supervisor.start_link(children, strategy: :one_for_one, name: Gollum.Supervisor)
+    Supervisor.start_link(children,
+      strategy: :one_for_one,
+      name: Gollum.Supervisor
+    )
   end
 end

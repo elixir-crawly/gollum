@@ -58,7 +58,8 @@ defmodule Gollum.Host do
   :uncrawlable
   ```
   """
-  @spec crawlable?(Gollum.Host.t(), binary, binary) :: :crawlable | :uncrawlable | :undefined
+  @spec crawlable?(Gollum.Host.t(), binary, binary) ::
+          :crawlable | :uncrawlable | :undefined
   def crawlable?(%Gollum.Host{rules: rules}, user_agent, path) do
     # Determine the user agent
     key =
@@ -85,7 +86,9 @@ defmodule Gollum.Host do
 
   defp sanitize_user_agent_map(nil), do: %{allowed: [], disallowed: []}
   defp sanitize_user_agent_map(%{allowed: _, disallowed: _} = map), do: map
-  defp sanitize_user_agent_map(%{allowed: allowed}), do: %{allowed: allowed, disallowed: []}
+
+  defp sanitize_user_agent_map(%{allowed: allowed}),
+    do: %{allowed: allowed, disallowed: []}
 
   defp sanitize_user_agent_map(%{disallowed: disallowed}),
     do: %{allowed: [], disallowed: disallowed}
@@ -176,5 +179,6 @@ defmodule Gollum.Host do
   defp do_match_group(<<ch::utf8, lhs::binary>>, <<ch::utf8, rhs::binary>>),
     do: do_match_group(lhs, rhs)
 
-  defp do_match_group(<<_ch::utf8, lhs::binary>>, rhs), do: do_match_group(lhs, rhs)
+  defp do_match_group(<<_ch::utf8, lhs::binary>>, rhs),
+    do: do_match_group(lhs, rhs)
 end

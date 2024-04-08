@@ -164,18 +164,30 @@ defmodule Gollum.HostTest do
       dIsAlLoW: /
       """
 
-      host_upper = Host.new("http://foo.bar/", Gollum.Parser.parse(robotstxt_upper))
-      host_lower = Host.new("http://foo.bar/", Gollum.Parser.parse(robotstxt_lower))
-      host_camel = Host.new("http://foo.bar/", Gollum.Parser.parse(robotstxt_camel))
+      host_upper =
+        Host.new("http://foo.bar/", Gollum.Parser.parse(robotstxt_upper))
+
+      host_lower =
+        Host.new("http://foo.bar/", Gollum.Parser.parse(robotstxt_lower))
+
+      host_camel =
+        Host.new("http://foo.bar/", Gollum.Parser.parse(robotstxt_camel))
+
       path_allowed = "/x/y"
       path_disallowed = "/a/b"
 
       assert Host.crawlable?(host_upper, "FooBot", path_allowed) == :crawlable
       assert Host.crawlable?(host_lower, "FooBot", path_allowed) == :crawlable
       assert Host.crawlable?(host_camel, "FooBot", path_allowed) == :crawlable
-      refute Host.crawlable?(host_upper, "FooBot", path_disallowed) == :crawlable
-      refute Host.crawlable?(host_lower, "FooBot", path_disallowed) == :crawlable
-      refute Host.crawlable?(host_camel, "FooBot", path_disallowed) == :crawlable
+
+      refute Host.crawlable?(host_upper, "FooBot", path_disallowed) ==
+               :crawlable
+
+      refute Host.crawlable?(host_lower, "FooBot", path_disallowed) ==
+               :crawlable
+
+      refute Host.crawlable?(host_camel, "FooBot", path_disallowed) ==
+               :crawlable
     end
 
     # User-agent line values are case insensitive. See REP RFC section "The
@@ -200,24 +212,43 @@ defmodule Gollum.HostTest do
       Disallow: /
       """
 
-      host_upper = Host.new("http://foo.bar/", Gollum.Parser.parse(robotstxt_upper))
-      host_lower = Host.new("http://foo.bar/", Gollum.Parser.parse(robotstxt_lower))
-      host_camel = Host.new("http://foo.bar/", Gollum.Parser.parse(robotstxt_camel))
+      host_upper =
+        Host.new("http://foo.bar/", Gollum.Parser.parse(robotstxt_upper))
+
+      host_lower =
+        Host.new("http://foo.bar/", Gollum.Parser.parse(robotstxt_lower))
+
+      host_camel =
+        Host.new("http://foo.bar/", Gollum.Parser.parse(robotstxt_camel))
+
       path_allowed = "/x/y"
       path_disallowed = "/a/b"
 
       assert Host.crawlable?(host_upper, "Foo Bar", path_allowed) == :crawlable
       assert Host.crawlable?(host_lower, "Foo Bar", path_allowed) == :crawlable
       assert Host.crawlable?(host_camel, "Foo Bar", path_allowed) == :crawlable
-      refute Host.crawlable?(host_upper, "Foo Bar", path_disallowed) == :crawlable
-      refute Host.crawlable?(host_lower, "Foo Bar", path_disallowed) == :crawlable
-      refute Host.crawlable?(host_camel, "Foo Bar", path_disallowed) == :crawlable
+
+      refute Host.crawlable?(host_upper, "Foo Bar", path_disallowed) ==
+               :crawlable
+
+      refute Host.crawlable?(host_lower, "Foo Bar", path_disallowed) ==
+               :crawlable
+
+      refute Host.crawlable?(host_camel, "Foo Bar", path_disallowed) ==
+               :crawlable
+
       assert Host.crawlable?(host_upper, "foo bar", path_allowed) == :crawlable
       assert Host.crawlable?(host_lower, "foo bar", path_allowed) == :crawlable
       assert Host.crawlable?(host_camel, "foo bar", path_allowed) == :crawlable
-      refute Host.crawlable?(host_upper, "foo bar", path_disallowed) == :crawlable
-      refute Host.crawlable?(host_lower, "foo bar", path_disallowed) == :crawlable
-      refute Host.crawlable?(host_camel, "foo bar", path_disallowed) == :crawlable
+
+      refute Host.crawlable?(host_upper, "foo bar", path_disallowed) ==
+               :crawlable
+
+      refute Host.crawlable?(host_lower, "foo bar", path_disallowed) ==
+               :crawlable
+
+      refute Host.crawlable?(host_camel, "foo bar", path_disallowed) ==
+               :crawlable
     end
 
     # If no group matches the user-agent, crawlers must obey the first group with a
@@ -244,11 +275,17 @@ defmodule Gollum.HostTest do
       disallow: /
       """
 
-      host_empty = Host.new("http://foo.bar/", Gollum.Parser.parse(robotstxt_empty))
-      host_global = Host.new("http://foo.bar/", Gollum.Parser.parse(robotstxt_global))
+      host_empty =
+        Host.new("http://foo.bar/", Gollum.Parser.parse(robotstxt_empty))
+
+      host_global =
+        Host.new("http://foo.bar/", Gollum.Parser.parse(robotstxt_global))
 
       host_only_specific =
-        Host.new("http://foo.bar/", Gollum.Parser.parse(robotstxt_only_specific))
+        Host.new(
+          "http://foo.bar/",
+          Gollum.Parser.parse(robotstxt_only_specific)
+        )
 
       path = "/x/y"
 
@@ -273,10 +310,16 @@ defmodule Gollum.HostTest do
       """
 
       host_lowercase_url =
-        Host.new("http://foo.bar/", Gollum.Parser.parse(robotstxt_lowercase_url))
+        Host.new(
+          "http://foo.bar/",
+          Gollum.Parser.parse(robotstxt_lowercase_url)
+        )
 
       host_uppercase_url =
-        Host.new("http://foo.bar/", Gollum.Parser.parse(robotstxt_uppercase_url))
+        Host.new(
+          "http://foo.bar/",
+          Gollum.Parser.parse(robotstxt_uppercase_url)
+        )
 
       path = "/x/y"
 
@@ -445,7 +488,9 @@ defmodule Gollum.HostTest do
            """,
            host <- Host.new("http://foo.bar/", Gollum.Parser.parse(robotstxt)) do
         assert Host.crawlable?(host, "FooBot", "/foo/bar/baz") == :crawlable
-        assert Host.crawlable?(host, "FooBot", "/foo/bar/%62%61%7A") == :crawlable
+
+        assert Host.crawlable?(host, "FooBot", "/foo/bar/%62%61%7A") ==
+                 :crawlable
       end
     end
 

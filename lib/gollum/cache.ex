@@ -125,8 +125,14 @@ defmodule Gollum.Cache do
   @doc false
   def handle_call({:fetch, host, fetch_opts}, from, {store, pending, opts}) do
     case pending[host] do
-      nil -> do_possible_fetch({host, [{:from, from} | fetch_opts]}, {store, pending, opts})
-      froms -> {:noreply, {store, %{pending | host => [from | froms]}, opts}}
+      nil ->
+        do_possible_fetch(
+          {host, [{:from, from} | fetch_opts]},
+          {store, pending, opts}
+        )
+
+      froms ->
+        {:noreply, {store, %{pending | host => [from | froms]}, opts}}
     end
   end
 
@@ -151,9 +157,11 @@ defmodule Gollum.Cache do
 
     with {:force, false} <- {:force, fetch_opts[:force] || @force},
          {:exists, {_data, time}} <- {:exists, store[host]},
-         {:lazy_refresh, true} <- {:lazy_refresh, opts[:lazy_refresh] || @lazy_refresh},
+         {:lazy_refresh, true} <-
+           {:lazy_refresh, opts[:lazy_refresh] || @lazy_refresh},
          refresh_secs = opts[:refresh_secs] || @refresh_secs,
-         {:refresh_secs, true} <- {:refresh_secs, cur_time - time > refresh_secs} do
+         {:refresh_secs, true} <-
+           {:refresh_secs, cur_time - time > refresh_secs} do
       do_fetch({host, fetch_opts}, {store, pending, opts})
     else
       {:force, true} ->

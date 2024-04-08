@@ -41,7 +41,8 @@ defmodule Gollum do
   :uncrawlable
   ```
   """
-  @spec crawlable?(binary, binary, keyword) :: :crawlable | :uncrawlable | :undefined
+  @spec crawlable?(binary, binary, keyword) ::
+          :crawlable | :uncrawlable | :undefined
   def crawlable?(user_agent, url, opts \\ []) do
     name = opts[:name] || Gollum.Cache
 
@@ -50,7 +51,9 @@ defmodule Gollum do
     path = uri.path || "/"
 
     case Cache.fetch(host, name: name) do
-      {:error, _} -> :crawlable
+      {:error, _} ->
+        :crawlable
+
       :ok ->
         host
         |> Cache.get(name: name)

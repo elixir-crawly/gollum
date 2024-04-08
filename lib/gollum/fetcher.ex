@@ -10,20 +10,24 @@ defmodule Gollum.Fetcher do
   @spec fetch(binary, keyword) :: {:ok, binary} | {:error, term}
   def fetch(domain, opts) do
     headers = [
-      {"User-Agent", opts[:user_agent] || "Gollum"},
+      {"User-Agent", opts[:user_agent] || "Gollum"}
     ]
+
     other_opts = [
       follow_redirect: true,
-      ssl: [{:versions, [:'tlsv1.2']}],
+      ssl: [{:versions, [:"tlsv1.2"]}]
     ]
+
     opts = Keyword.merge(opts, other_opts)
 
     # Make the request via HTTPoison and return the ok | error tuple
     case HTTPoison.get("#{domain}/robots.txt", headers, opts) do
       {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
         {:ok, body}
+
       {:ok, _response} ->
         {:error, :no_robots_file}
+
       {:error, %HTTPoison.Error{reason: reason}} ->
         {:error, reason}
     end

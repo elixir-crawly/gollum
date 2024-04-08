@@ -34,10 +34,17 @@ defmodule Gollum.Parser do
   # Tokenize a single line of the robots.txt.
   defp tokenize(line) do
     cond do
-      result = Regex.run(~r/^allow:?\s(.+)$/i, line) -> {:allow, Enum.at(result, 1)}
-      result = Regex.run(~r/^disallow:?\s(.+)$/i, line) -> {:disallow, Enum.at(result, 1)}
-      result = Regex.run(~r/^user-agent:?\s(.+)$/i, line) -> {:user_agent, Enum.at(result, 1)}
-      true -> :unknown
+      result = Regex.run(~r/^allow:?\s(.+)$/i, line) ->
+        {:allow, Enum.at(result, 1)}
+
+      result = Regex.run(~r/^disallow:?\s(.+)$/i, line) ->
+        {:disallow, Enum.at(result, 1)}
+
+      result = Regex.run(~r/^user-agent:?\s(.+)$/i, line) ->
+        {:user_agent, Enum.at(result, 1)}
+
+      true ->
+        :unknown
     end
   end
 
@@ -71,7 +78,10 @@ defmodule Gollum.Parser do
   # Add a disallowed field
   defp do_parse([{:disallow, path} | tokens], {agents, rules}, accum) do
     [path | _] = String.split(URI.encode(URI.decode(path)), "#")
-    rules = Map.put(rules || %{}, :disallowed, [path | rules[:disallowed] || []])
+
+    rules =
+      Map.put(rules || %{}, :disallowed, [path | rules[:disallowed] || []])
+
     do_parse(tokens, {agents, rules}, accum)
   end
 
