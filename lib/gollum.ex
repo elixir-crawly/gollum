@@ -47,7 +47,12 @@ defmodule Gollum do
     name = opts[:name] || Gollum.Cache
 
     uri = URI.parse(url)
-    host = "#{uri.scheme}://#{uri.host}"
+    port = case {uri.port, uri.scheme} do
+      {80, "http"} -> ""
+      {443, "https"} -> ""
+      {port, _} -> ":#{port}"
+    end
+    host = "#{uri.scheme}://#{uri.host}#{port}"
     path = uri.path || "/"
 
     case Cache.fetch(host, name: name) do
