@@ -26,4 +26,23 @@ defmodule Gollum.CacheTest do
     assert {:error, :no_robots_file} = Cache.fetch("error", name: TestCache)
     assert Cache.get("error", name: TestCache) == nil
   end
+
+  def assert_eventually(fun, timeout \\ 100, interval \\ 10) do
+    deadline = System.monotonic_time(:millisecond) + timeout
+    do_assert_eventually(fun, deadline, interval)
+  end
+
+  defp do_assert_eventually(fun, deadline, interval) do
+    result = fun.()
+    assert result
+    result
+  rescue
+    error in ExUnit.AssertionError ->
+      if System.monotonic_time(:millisecond) >= deadline do
+        reraise error, __STACKTRACE__
+      else
+        Process.sleep(interval)
+        do_assert_eventually(fun, deadline, interval)
+      end
+  end
 end
