@@ -5,7 +5,7 @@ defmodule Gollum.Mixfile do
     [
       app: :gollum,
       version: "0.5.0",
-      elixir: "~> 1.7",
+      elixir: "~> 1.18",
       elixirc_paths: elixirc_paths(Mix.env()),
       start_permanent: Mix.env() == :prod,
       deps: deps(),
